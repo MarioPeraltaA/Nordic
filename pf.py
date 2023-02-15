@@ -83,7 +83,7 @@ if __name__ == "__main__":
                 # Reactiva
                 buses[name].QL = float(words[8]) / Bus.S_base
                 # Tipo
-                buses[name] = 'PQ'
+                buses[name].bus_type = 'PQ'
 
             # Aquellas que tienen compensadores en derivación
             elif words[0] == 'Compensador':
