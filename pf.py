@@ -50,11 +50,6 @@ class Line:
 if __name__ == "__main__":
 
     buses = {}
-    lineas = []
-
-
-
-
 
     with open('data/nordico.txt') as f:
         for line in f:
@@ -114,5 +109,5 @@ if __name__ == "__main__":
 
     print(buses['g20'])     # Slack
     print(len(buses))
-    print(lineas)
+
     
