@@ -33,9 +33,28 @@ class Bus:
         return f'{self.__dict__}'
 
 
+class Line:
+    '''
+    Clase para representar una línea de la red eléctrica.
+    '''
+
+    def __init__(self, from_bus, to_bus, X, R, from_Y, to_Y):
+
+        self.from_bus = from_bus
+        self.to_bus = to_bus
+        self.X = X
+        self.R = R
+        self.from_Y = from_Y
+        self.to_Y = to_Y
+
 if __name__ == "__main__":
 
     buses = {}
+    lineas = []
+
+
+
+
 
     with open('data/nordico.txt') as f:
         for line in f:
@@ -75,7 +94,7 @@ if __name__ == "__main__":
                     # Tipo
                     buses[name].bus_type = 'PV'
 
-            # De distribución:
+            # De carga:
             elif words[0] == 'Carga':
                 name = words[3]
                 # Potencia injectada: positiva por ser de carga
@@ -92,5 +111,25 @@ if __name__ == "__main__":
                 buses[name].PL = 0.0
                 buses[name].QL = float(words[6]) / Bus.S_base
 
+
+            elif words[0] == 'Línea':
+                from_bus = words[2]
+                to_bus = words[4]
+                R = words[8] #####Pasar a pu
+                X = words[12] #####Pasar a pu
+                B = words[17] #####Pasar a pu
+                total_B = j*B
+                lineas = Line(from_bus, to_bus, X, R, total_B, total_B)
+                lineas.append(lineas)
+
+
+
+
+
+
+
+
     print(buses['g20'])     # Slack
     print(len(buses))
+    print(lineas)
+    
