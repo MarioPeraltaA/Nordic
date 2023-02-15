@@ -15,7 +15,7 @@ Otro problema al que se enfrentan los operadores de redes de transmisión es gar
 
 ---
 
-*Fundamentos teóricos, Documentación y Resultados del proyecto.*
+*Planteamiento del problema, Documentación y Resultados del proyecto.*
 
 # Tabla de contenido
 1. [Sistema](#1.0) <br>
