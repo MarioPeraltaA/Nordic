@@ -32,21 +32,6 @@ class Bus:
         """
         return f'{self.__dict__}'
 
-
-class Line:
-    '''
-    Clase para representar una línea de la red eléctrica.
-    '''
-
-    def __init__(self, from_bus, to_bus, X, R, from_Y, to_Y):
-
-        self.from_bus = from_bus
-        self.to_bus = to_bus
-        self.X = X
-        self.R = R
-        self.from_Y = from_Y
-        self.to_Y = to_Y
-
 if __name__ == "__main__":
 
     buses = {}
@@ -109,5 +94,3 @@ if __name__ == "__main__":
 
     print(buses['g20'])     # Slack
     print(len(buses))
-
-    
