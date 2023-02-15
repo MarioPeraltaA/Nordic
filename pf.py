@@ -112,23 +112,6 @@ if __name__ == "__main__":
                 buses[name].QL = float(words[6]) / Bus.S_base
 
 
-            elif words[0] == 'Línea':
-                from_bus = words[2]
-                to_bus = words[4]
-                R = words[8] #####Pasar a pu
-                X = words[12] #####Pasar a pu
-                B = words[17] #####Pasar a pu
-                total_B = j*B
-                lineas = Line(from_bus, to_bus, X, R, total_B, total_B)
-                lineas.append(lineas)
-
-
-
-
-
-
-
-
     print(buses['g20'])     # Slack
     print(len(buses))
     print(lineas)
