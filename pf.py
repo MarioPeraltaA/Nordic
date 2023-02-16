@@ -32,9 +32,73 @@ class Bus:
         """
         return f'{self.__dict__}'
 
+class Line:
+    def __init__(
+            self,
+            from_bus: Bus,
+            to_bus: Bus,
+            R: float,
+            X: float,
+            from_Y: complex,
+            to_Y: complex,
+            operation: bool) -> None:
+
+        self.from_bus = from_bus    # Barra de inicio
+        self.to_bus = to_bus        # Barra final
+        self.R = R                  # Resistencia pu
+        self.X = X                  # Reactancia pu
+        # Admitancias de derivación
+        self.from_Y = from_Y        # Mitad al inicio
+        self.to_Y = to_Y            # Otra mitad al final
+        self.operation = operation  # True: It is in operation
+
+    def __str__(self):
+        """Información.
+
+        Mostrar atributos de la instancia particular.
+        """
+        return f'{self.__dict__}'
+
+class Transformer:
+    """Transformador con relación de transformación no nominal.
+
+    Modela los transformadores de dos devanados cuando su relación
+    de transformación no es nominal, es decir los cambiadores de tomas
+    no se encuentran en la posición que garantiza la relación de
+    transformación nominal por lo tanto no es posible modelarlos como
+    una instancia de la clase ``Line``.
+
+    """
+    def __init__(
+            self,
+            from_bus: Bus,
+            to_bus: Bus,
+            R: float,
+            X: float,
+            from_Y: complex,
+            to_Y: complex,
+            c: float):
+
+        self.from_bus = from_bus
+        self.to_bus = to_bus
+        self.X = X              # Reactancia  pu base 100 MVA
+        self.R = R              # Resistencia pu base 100 MVA
+        self.from_Y = from_Y    # Rama derivada a la entrada
+        self.to_Y = to_Y        # Rama derivada a la salida
+        self.c = c      # Relación de transformación 1/n en pu
+
+    def __str__(self):
+        """Información.
+
+        Mostrar atributos de la instancia particular.
+        """
+        return f'{self.__dict__}'
+
 if __name__ == "__main__":
 
     buses = {}
+    lines = []
+    transformers = []
 
     with open('data/nordico.txt') as f:
         for line in f:
@@ -44,6 +108,7 @@ if __name__ == "__main__":
             if len(words) == 0:
                 continue
 
+            # Crear instancias de barras
             # Identificar barras
             if words[0] == 'Barra':
                 name = words[2]
@@ -88,9 +153,43 @@ if __name__ == "__main__":
             # Aquellas que tienen compensadores en derivación
             elif words[0] == 'Compensador':
                 name = words[3]
-                buses[name].PL = 0.0
-                buses[name].QL = float(words[6]) / Bus.S_base
+                buses[name].G = 0.0
+                buses[name].B = float(words[6]) / Bus.S_base
 
+            # Crear instancias de líneas
+            elif words[0] == 'Línea':
+                name_from = words[2]
+                name_to = words[4]
+                # Crear instancia
+                line = Line(
+                    from_bus=buses[name_from],
+                    to_bus=buses[name_to],
+                    R=float(words[8]) / buses[name_from].Vb,
+                    X=float(words[12]) / buses[name_from].Vb,
+                    from_Y=float(words[17]) / buses[name_from].Vb,
+                    to_Y=float(words[17]) / buses[name_from].Vb,
+                    operation=True
+                )
+                # Almacenar en lista
+                lines.append(line)
 
-    print(buses['g20'])     # Slack
-    print(len(buses))
+            # Crear instancias de transformadores
+            elif words[0] == 'Transformador':
+                name_from = words[2]
+                name_to = words[4]
+                # Impedancia en base nueva
+                Z_old = float(words[8])/100 + 1j*float(words[12])/100
+                Sb_old = float(words[21])   # Capacidad
+                Z_new = (Z_old*Bus.S_base) / (Sb_old)
+                # Crear instancia
+                transformer = Transformer(
+                    from_bus=buses[name_from],
+                    to_bus=buses[name_to],
+                    R=Z_new.real,
+                    X=Z_new.imag,
+                    from_Y=np.nan,
+                    to_Y=np.nan,
+                    c = 1/((float(words[16]))*(100))
+                )
+                # Almacenar en lista
+                transformers.append(transformer)
