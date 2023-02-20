@@ -5,7 +5,7 @@
 
 Tercer ciclo del 2022
 
-- Alejandra Aguilar
+- Alejandra Aguilar, B60140
 - Mario Roberto Peralta, B75626
 - Sebastian Acuña
 
