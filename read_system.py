@@ -1,14 +1,15 @@
 import numpy as np
 
+
 # ------------
 # Asignación 1
 # ------------
 # Leer el archivo nordico.txt y crear un modelo eléctrico
 # de la red.
-
 class MyBus:
     # Todas las cantidades en pu suponen una base de 100 MVA.
     S_base = 100    # MVA
+
     def __init__(self,
                  name: str,
                  V: float,
@@ -36,6 +37,7 @@ class MyBus:
         Mostrar atributos de la instancia particular.
         """
         return f'{self.__dict__}'
+
 
 class MyLine:
     def __init__(
@@ -65,6 +67,7 @@ class MyLine:
         Mostrar atributos de la instancia particular.
         """
         return f'{self.__dict__}'
+
 
 class MyTransformer:
     """Transformador con relación de transformación no nominal.
@@ -98,6 +101,7 @@ class MyTransformer:
         Mostrar atributos de la instancia particular.
         """
         return f'{self.__dict__}'
+
 
 if __name__ == "__main__":
 
@@ -234,7 +238,8 @@ if __name__ == "__main__":
                            G=bus.G,
                            B=bus.B,
                            name=bus.name)
-            
+
+        # Sobre la marcha
         bus.associated_pf_bus = b
 
     # Definir líneas
@@ -255,7 +260,7 @@ if __name__ == "__main__":
                             n=tx.n,
                             MVA=tx.MVA,
                             Sbase=100)
-        
+
     # Correr fujo de potencia
     sys.run_pf()
 
@@ -309,21 +314,21 @@ if __name__ == "__main__":
     plt.figure()
     for name, v in tensiones.items():
         plt.plot(lambds, tensiones[name], label=name)
-    plt.xlabel('$\lambda$')
+    plt.xlabel('lambda')
     plt.ylabel('Tensión [pu]')
     plt.title('Análisis de cargabilidad')
     plt.legend()
     plt.show()
 
-    # # ------------
-    # # Asignación 4
-    # # ------------
-    # # Análisis de contingencia: Prueba n - 1
-    # # Nota: Volver a correr el programa para ésta prueba.
+    # ------------
+    # Asignación 4
+    # ------------
+    # Análisis de contingencia: Prueba n - 1
+    # Nota: Volver a correr el programa para ésta prueba.
 
-    # for ln in sys.lines:
-    #     ln.in_operation = False
-    #     if not sys.run_pf():
-    #         # Líneas críticas
-    #         print(f'Desconección de línea {ln}')
-    #     ln.in_operation = True
+    for ln in sys.lines:
+        ln.in_operation = False
+        if not sys.run_pf():
+            # Líneas críticas
+            print(f'Desconección de línea {ln}')
+        ln.in_operation = True
